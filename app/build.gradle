@@ -30,6 +30,10 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.1.2-alpha02'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0-alpha02'
 
+    implementation project(":mvp")
+    implementation project(":logger")
+    implementation project(":sharedprefhelper")
+
     implementation deps.rx.java
     implementation deps.rx.android
 

@@ -14,7 +14,7 @@ abstract class BasePresenter<T> {
         this.view = view
     }
 
-    open fun removeView() {
+    open fun unbindView() {
         view = null
         disposable.clear()
     }

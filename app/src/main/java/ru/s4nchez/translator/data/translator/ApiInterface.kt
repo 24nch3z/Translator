@@ -13,7 +13,6 @@ interface ApiInterface {
     @POST("translate")
     @Headers("Content-Type: application/json; charset=utf-8")
     fun translate(
-            @Query("key") key: String,
             @Query("text") text: String,
             @Query("lang") lang: String
     ): Call<Translation>

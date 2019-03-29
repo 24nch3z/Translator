@@ -49,6 +49,8 @@ class TranslatorFragment : BaseFragment(), TranslatorView {
                 observer.onNext(s.toString())
             }
         })
+
+        presenter.getLanguages()
     }
 
     override fun onDestroy() {

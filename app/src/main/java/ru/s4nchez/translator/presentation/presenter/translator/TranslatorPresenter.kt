@@ -10,20 +10,23 @@ class TranslatorPresenter(
         private val translatorInteractor: TranslatorInteractor
 ) : BasePresenter<TranslatorView>() {
 
-    fun translate(str: String) {
-//        val d = Single.just(str)
-//                .map { it.reversed() }
-//                .subscribe({
-//                    view?.showTranslate(it)
-//                }, {})
+    fun getLanguages() {
+        val d = translatorInteractor.getLanguages("ru")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    val t = it
+                }, {})
+        disposable.add(d)
+    }
 
+    fun translate(str: String) {
         val d = translatorInteractor.translate(str)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     view?.showTranslate(it[0])
                 }, {})
-
         disposable.add(d)
     }
 }

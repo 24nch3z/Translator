@@ -62,4 +62,20 @@ class TranslatorFragment : BaseFragment(), TranslatorView {
     override fun showTranslate(translate: String) {
         translate_view.text = translate
     }
+
+    override fun showProgress() {
+        progress_view.visibility = View.VISIBLE
+    }
+
+    override fun hideProgress() {
+        progress_view.visibility = View.INVISIBLE
+    }
+
+    override fun showUi() {
+        ui_container.visibility = View.VISIBLE
+    }
+
+    override fun hideUi() {
+        ui_container.visibility = View.INVISIBLE
+    }
 }

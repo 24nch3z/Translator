@@ -6,6 +6,7 @@ import ru.s4nchez.logger.Logger
 import ru.s4nchez.mvp.BasePresenter
 import ru.s4nchez.translator.domain.translator.TranslatorInteractor
 import ru.s4nchez.translator.domain.translatorfacade.interactor.TranslatorFacadeInteractor
+import ru.s4nchez.translator.domain.translatorfacade.model.Language
 import ru.s4nchez.translator.presentation.view.translator.TranslatorView
 
 class TranslatorPresenter(
@@ -42,7 +43,7 @@ class TranslatorPresenter(
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    Logger.d("")
+                    view?.openDialog(it as ArrayList<Language>)
                 }, { Logger.d(it); throw it })
         disposable.add(d)
     }

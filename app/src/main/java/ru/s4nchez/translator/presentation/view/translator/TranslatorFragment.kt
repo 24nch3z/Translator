@@ -10,6 +10,7 @@ import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.screen_translator.*
 import ru.s4nchez.translator.App
 import ru.s4nchez.translator.R
+import ru.s4nchez.translator.domain.translatorfacade.model.Language
 import ru.s4nchez.translator.presentation.presenter.translator.TranslatorPresenter
 import ru.s4nchez.translator.presentation.view.common.BaseFragment
 import java.util.concurrent.TimeUnit
@@ -59,6 +60,11 @@ class TranslatorFragment : BaseFragment(), TranslatorView {
         super.onDestroy()
         (activity?.application as App).componentManager.destroyTranslatorComponent()
         presenter.unbindView()
+    }
+
+    override fun openDialog(langs: ArrayList<Language>) {
+        val dialog = ListDialogFragment.newInstance(langs)
+        dialog.show(fragmentManager!!, null)
     }
 
     override fun showTranslate(translate: String) {

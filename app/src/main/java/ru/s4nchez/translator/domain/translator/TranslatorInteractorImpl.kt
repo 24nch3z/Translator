@@ -12,7 +12,7 @@ class TranslatorInteractorImpl(
         return translationRepository.translate(str, from, to)
     }
 
-    override fun getLanguages(uiLang: String): Single<Languages> {
-        return translationRepository.getLanguages(uiLang)
+    override fun getLanguages(): Single<Languages> {
+        return translationRepository.getLanguages()
     }
 }

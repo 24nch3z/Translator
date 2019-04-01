@@ -22,7 +22,7 @@ class SettingsModule {
 
     @Provides
     @Singleton
-    fun provideSettingsRepository(diskSettingsDataSource: DiskSettingsDataSource): SettingsRepository {
+    fun provideSettingsRepository(diskSettingsDataSource: SettingsDataSource): SettingsRepository {
         return SettingsRepositoryImpl(diskSettingsDataSource)
     }
 

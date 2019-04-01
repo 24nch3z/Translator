@@ -5,5 +5,5 @@ import ru.s4nchez.translator.data.translator.model.Languages
 
 interface TranslatorInteractor {
     fun translate(str: String, from: String, to: String): Single<List<String>>
-    fun getLanguages(uiLang: String): Single<Languages>
+    fun getLanguages(): Single<Languages>
 }

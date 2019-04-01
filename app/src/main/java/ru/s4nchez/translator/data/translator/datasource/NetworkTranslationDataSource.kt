@@ -18,8 +18,8 @@ class NetworkTranslationDataSource(retrofit: Retrofit) : BaseNetworkDataSource()
         return makeRequest(api.translate(str, "$from-$to")).map { it.text }
     }
 
-    override fun getLanguages(uiLang: String): Single<Languages> {
-        return makeRequest(api.getLanguages(uiLang))
+    override fun getLanguages(): Single<Languages> {
+        return makeRequest(api.getLanguages("ru"))
     }
 
     override fun putLanguages(languages: Languages): Completable {

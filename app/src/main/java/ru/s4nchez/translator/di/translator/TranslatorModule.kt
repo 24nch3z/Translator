@@ -8,11 +8,10 @@ import ru.s4nchez.translator.data.translator.datasource.NetworkTranslationDataSo
 import ru.s4nchez.translator.data.translator.datasource.TranslationDataSource
 import ru.s4nchez.translator.data.translator.repository.TranslationRepository
 import ru.s4nchez.translator.data.translator.repository.TranslationRepositoryImpl
-import ru.s4nchez.translator.di.common.scope.PerScreenScope
 import ru.s4nchez.translator.domain.translator.TranslatorInteractor
 import ru.s4nchez.translator.domain.translator.TranslatorInteractorImpl
-import ru.s4nchez.translator.presentation.presenter.translator.TranslatorPresenter
 import javax.inject.Named
+import javax.inject.Singleton
 
 @Module
 class TranslatorModule {
@@ -23,37 +22,32 @@ class TranslatorModule {
     }
 
     @Provides
-    @PerScreenScope
+    @Singleton
     @Named(NETWORK_DATA_SOURCE)
     fun provideNetworkTranslationDataSource(retrofit: Retrofit): TranslationDataSource {
         return NetworkTranslationDataSource(retrofit)
     }
 
     @Provides
-    @PerScreenScope
+    @Singleton
     @Named(MEMORY_DATA_SOURCE)
     fun provideMemoryTranslationDataSource(): TranslationDataSource {
         return MemoryTranslationDataSource()
     }
 
     @Provides
-    @PerScreenScope
+    @Singleton
     fun provideTranslationRepository(
-        @Named(NETWORK_DATA_SOURCE) networkTranslationDataSource: TranslationDataSource,
-        @Named(MEMORY_DATA_SOURCE) memoryTranslationDataSource: TranslationDataSource
+            @Named(NETWORK_DATA_SOURCE) networkTranslationDataSource: TranslationDataSource,
+            @Named(MEMORY_DATA_SOURCE) memoryTranslationDataSource: TranslationDataSource
     ): TranslationRepository {
 
         return TranslationRepositoryImpl(networkTranslationDataSource, memoryTranslationDataSource)
     }
 
     @Provides
-    @PerScreenScope
+    @Singleton
     fun provideTranslatorInteractor(translationRepository: TranslationRepository): TranslatorInteractor {
         return TranslatorInteractorImpl(translationRepository)
-    }
-
-    @Provides
-    fun provideTranslatorPresenter(translatorInteractor: TranslatorInteractor): TranslatorPresenter {
-        return TranslatorPresenter(translatorInteractor)
     }
 }

@@ -13,12 +13,12 @@ class TranslationRepositoryImpl(
         return networkDataSource.translate(str, from, to)
     }
 
-    override fun getLanguages(uiLang: String): Single<Languages> {
-        val fromNetworkWithSave = networkDataSource.getLanguages(uiLang)
+    override fun getLanguages(): Single<Languages> {
+        val fromNetworkWithSave = networkDataSource.getLanguages()
                 .flatMapCompletable { memoryDataSource.putLanguages(it) }
-                .andThen(memoryDataSource.getLanguages(uiLang))
+                .andThen(memoryDataSource.getLanguages())
 
-        return memoryDataSource.getLanguages(uiLang)
+        return memoryDataSource.getLanguages()
                 .onErrorResumeNext(fromNetworkWithSave)
     }
 }

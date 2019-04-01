@@ -12,7 +12,7 @@ class MemoryTranslationDataSource : TranslationDataSource {
         throw UnsupportedOperationException()
     }
 
-    override fun getLanguages(uiLang: String): Single<Languages> {
+    override fun getLanguages(): Single<Languages> {
         return Single.create {
             if (languages == null) {
                 it.onError(NullPointerException())

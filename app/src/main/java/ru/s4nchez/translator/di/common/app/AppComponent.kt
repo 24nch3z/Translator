@@ -11,3 +11,5 @@ import javax.inject.Singleton
 interface AppComponent {
     fun plusTranslatorComponent(module: TranslatorModule): TranslatorComponent
 }
+
+// TODO: Поправить di, вынести объекты, относящиеся к логики переводчика отдельно от презентора

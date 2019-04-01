@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.SharedPreferences
 
 @SuppressLint("ApplySharedPref")
-class SharedPrefHelper(private val context: Context) {
+class SharedPrefHelper(context: Context) {
 
     private val sharedPref: SharedPreferences
     private val filename = "shared"

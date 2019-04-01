@@ -1,10 +1,12 @@
 package ru.s4nchez.translator.data.translator.datasource
 
+import io.reactivex.Completable
 import io.reactivex.Single
 import retrofit2.Retrofit
 import ru.s4nchez.translator.data.common.BaseNetworkDataSource
 import ru.s4nchez.translator.data.translator.ApiInterface
 import ru.s4nchez.translator.data.translator.model.Languages
+import java.lang.UnsupportedOperationException
 
 class NetworkTranslationDataSource(retrofit: Retrofit) : BaseNetworkDataSource(), TranslationDataSource {
 
@@ -19,5 +21,9 @@ class NetworkTranslationDataSource(retrofit: Retrofit) : BaseNetworkDataSource()
 
     override fun getLanguages(uiLang: String): Single<Languages> {
         return makeRequest(api.getLanguages(uiLang))
+    }
+
+    override fun putLanguages(languages: Languages): Completable {
+        throw UnsupportedOperationException()
     }
 }

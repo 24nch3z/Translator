@@ -5,14 +5,20 @@ import ru.s4nchez.translator.data.translator.datasource.TranslationDataSource
 import ru.s4nchez.translator.data.translator.model.Languages
 
 class TranslationRepositoryImpl(
-        private val dataSource: TranslationDataSource
+    private val networkDataSource: TranslationDataSource,
+    private val memoryDataSource: TranslationDataSource
 ) : TranslationRepository {
 
     override fun translate(str: String): Single<List<String>> {
-        return dataSource.translate(str)
+        return networkDataSource.translate(str)
     }
 
     override fun getLanguages(uiLang: String): Single<Languages> {
-        return dataSource.getLanguages(uiLang)
+        val fromNetworkWithSave = networkDataSource.getLanguages(uiLang)
+            .flatMapCompletable { memoryDataSource.putLanguages(it) }
+            .andThen(memoryDataSource.getLanguages(uiLang))
+
+        return memoryDataSource.getLanguages(uiLang)
+            .onErrorResumeNext(fromNetworkWithSave)
     }
 }

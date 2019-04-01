@@ -10,7 +10,7 @@ class TranslationRepositoryImpl(
 ) : TranslationRepository {
 
     override fun translate(str: String, from: String, to: String): Single<List<String>> {
-        return networkDataSource.translate(str)
+        return networkDataSource.translate(str, from, to)
     }
 
     override fun getLanguages(uiLang: String): Single<Languages> {

@@ -9,7 +9,7 @@ class TranslatorInteractorImpl(
 ) : TranslatorInteractor {
 
     override fun translate(str: String, from: String, to: String): Single<List<String>> {
-        return translationRepository.translate(str)
+        return translationRepository.translate(str, from, to)
     }
 
     override fun getLanguages(uiLang: String): Single<Languages> {

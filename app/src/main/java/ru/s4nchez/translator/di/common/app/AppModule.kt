@@ -1,4 +1,4 @@
-package ru.s4nchez.translator.di.common
+package ru.s4nchez.translator.di.common.app
 
 import android.content.Context
 import dagger.Module

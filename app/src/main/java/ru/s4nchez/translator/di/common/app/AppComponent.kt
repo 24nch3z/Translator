@@ -1,6 +1,7 @@
-package ru.s4nchez.translator.di.common
+package ru.s4nchez.translator.di.common.app
 
 import dagger.Component
+import ru.s4nchez.translator.di.common.network.NetworkModule
 import ru.s4nchez.translator.di.translator.TranslatorComponent
 import ru.s4nchez.translator.di.translator.TranslatorModule
 import javax.inject.Singleton

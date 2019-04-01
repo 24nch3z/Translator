@@ -1,4 +1,4 @@
-package ru.s4nchez.translator.di.common
+package ru.s4nchez.translator.di.common.network
 
 import dagger.Module
 import dagger.Provides
@@ -7,7 +7,6 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.s4nchez.translator.data.translator.BASE_URL
-import ru.s4nchez.translator.network.RequestInterceptor
 import javax.inject.Singleton
 
 @Module

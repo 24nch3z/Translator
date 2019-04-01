@@ -1,4 +1,4 @@
-package ru.s4nchez.translator.network
+package ru.s4nchez.translator.di.common.network
 
 import okhttp3.Interceptor
 import okhttp3.Response

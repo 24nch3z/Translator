@@ -1,6 +1,8 @@
 package ru.s4nchez.translator.di.common
 
 import android.content.Context
+import ru.s4nchez.translator.di.common.app.AppComponent
+import ru.s4nchez.translator.di.common.app.AppModule
 import ru.s4nchez.translator.di.translator.TranslatorComponent
 import ru.s4nchez.translator.di.translator.TranslatorModule
 

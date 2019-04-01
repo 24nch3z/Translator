@@ -11,11 +11,11 @@ class NetworkTranslationDataSource(retrofit: Retrofit) : BaseNetworkDataSource()
 
     private val api: ApiInterface = retrofit.create(ApiInterface::class.java)
 
-    override fun translate(str: String): Single<List<String>> {
+    override fun translate(str: String, from: String, to: String): Single<List<String>> {
         if (str.trim().isEmpty()) {
             return Single.just(arrayListOf(""))
         }
-        return makeRequest(api.translate(str, "ru-en")).map { it.text }
+        return makeRequest(api.translate(str, "$from-$to")).map { it.text }
     }
 
     override fun getLanguages(uiLang: String): Single<Languages> {

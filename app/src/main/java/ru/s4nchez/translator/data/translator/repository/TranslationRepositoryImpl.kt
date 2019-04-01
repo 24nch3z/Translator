@@ -9,7 +9,7 @@ class TranslationRepositoryImpl(
         private val memoryDataSource: TranslationDataSource
 ) : TranslationRepository {
 
-    override fun translate(str: String): Single<List<String>> {
+    override fun translate(str: String, from: String, to: String): Single<List<String>> {
         return networkDataSource.translate(str)
     }
 

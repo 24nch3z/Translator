@@ -21,7 +21,7 @@ class TranslatorPresenter(
     }
 
     fun translate(str: String) {
-        val d = translatorInteractor.translate(str)
+        val d = translatorInteractor.translate(str, "ru", "en")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({

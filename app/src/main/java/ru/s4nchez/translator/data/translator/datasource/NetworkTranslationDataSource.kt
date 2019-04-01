@@ -6,7 +6,6 @@ import retrofit2.Retrofit
 import ru.s4nchez.translator.data.common.BaseNetworkDataSource
 import ru.s4nchez.translator.data.translator.ApiInterface
 import ru.s4nchez.translator.data.translator.model.Languages
-import java.lang.UnsupportedOperationException
 
 class NetworkTranslationDataSource(retrofit: Retrofit) : BaseNetworkDataSource(), TranslationDataSource {
 

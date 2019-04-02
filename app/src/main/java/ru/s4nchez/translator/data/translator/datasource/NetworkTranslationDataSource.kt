@@ -20,6 +20,25 @@ class NetworkTranslationDataSource(retrofit: Retrofit) : BaseNetworkDataSource()
 
     override fun getLanguages(): Single<Languages> {
         return makeRequest(api.getLanguages("ru"))
+                .map { languages ->
+                    val languagesInDirs = HashSet<String>()
+
+                    languages.dirs.forEach {
+                        val parts = it.split("-")
+                        languagesInDirs.add(parts[0])
+                        languagesInDirs.add(parts[1])
+                    }
+
+                    val iterator = languages.langs.keys.iterator()
+                    while (iterator.hasNext()) {
+                        val next = iterator.next()
+                        if (!languagesInDirs.contains(next)) {
+                            iterator.remove()
+                        }
+                    }
+
+                    languages
+                }
     }
 
     override fun putLanguages(languages: Languages): Completable {

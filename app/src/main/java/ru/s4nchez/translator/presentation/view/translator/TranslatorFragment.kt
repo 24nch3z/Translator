@@ -105,6 +105,11 @@ class TranslatorFragment : BaseFragment(), TranslatorView {
         translate_view.text = translate
     }
 
+    override fun showLanguages(languages: List<String>) {
+        lang_from_button.text = languages[0]
+        lang_to_button.text = languages[1]
+    }
+
     override fun showProgress() {
         progress_view.visibility = View.VISIBLE
     }

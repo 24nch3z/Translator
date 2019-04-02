@@ -1,5 +1,6 @@
 package ru.s4nchez.translator.domain.translatorfacade.interactor
 
+import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import ru.s4nchez.translator.data.translator.model.Languages
@@ -37,5 +38,19 @@ class TranslatorFacadeInteractorImpl(
         return Single.zip(settingsInteractor.getTranslationFrom(), settingsInteractor.getTranslationTo(),
                 BiFunction<String, String, Array<String?>> { t1, t2 -> arrayOf(t1, t2) })
                 .flatMap { translatorInteractor.translate(str, it[0]!!, it[1]!!) }
+    }
+
+    override fun setFromLanguage(language: Language): Single<List<String>> {
+        return settingsInteractor.setTranslationFrom(language.code)
+                .andThen(translatorInteractor.getAvailableLanguagesForTranslation(language.code))
+                .flatMap { availableLanguages ->
+                    Single.zip(settingsInteractor.getTranslationFrom(), settingsInteractor.getTranslationTo(),
+                            BiFunction<String, String, List<String>> { t1, t2 ->
+                                listOf(t1, availableLanguages.find { it == t2 } ?: availableLanguages[0]) })
+                }
+                .flatMap { settingsInteractor.setTranslationTo(it[1]).toSingle { it } }
+                .flatMapObservable { Observable.fromIterable(it) }
+                .flatMapSingle { translatorInteractor.getLanguageLabelByCode(it) }
+                .toList()
     }
 }

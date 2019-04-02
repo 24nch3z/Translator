@@ -59,7 +59,13 @@ class TranslatorPresenter(
     }
 
     fun setFromLanguage(language: Language) {
-
+        val d = translatorFacadeInteractor.setFromLanguage(language)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    view?.showLanguages(it)
+                }, { Logger.d(it); throw it })
+        disposable.add(d)
     }
 
     fun setToLanguage(language: Language) {

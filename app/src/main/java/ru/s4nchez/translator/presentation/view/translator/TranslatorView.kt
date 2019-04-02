@@ -8,6 +8,6 @@ interface TranslatorView {
     fun hideProgress()
     fun showUi()
     fun hideUi()
-    fun openChooseLangFromDialog(languages: ArrayList<Language>)
-    fun openChooseLangToDialog(languages: ArrayList<Language>)
+    fun openChooseFromLanguageDialog(languages: ArrayList<Language>)
+    fun openChooseToLanguageDialog(languages: ArrayList<Language>)
 }

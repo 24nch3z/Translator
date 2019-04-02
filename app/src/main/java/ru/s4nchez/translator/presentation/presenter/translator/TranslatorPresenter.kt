@@ -14,7 +14,7 @@ class TranslatorPresenter(
         private val translatorFacadeInteractor: TranslatorFacadeInteractor
 ) : BasePresenter<TranslatorView>() {
 
-    fun getLanguages() {
+    fun initLanguages() {
         view?.hideUi()
         view?.showProgress()
 
@@ -43,7 +43,17 @@ class TranslatorPresenter(
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    view?.openChooseLangFromDialog(it as ArrayList<Language>)
+                    view?.openChooseFromLanguageDialog(it as ArrayList<Language>)
+                }, { Logger.d(it); throw it })
+        disposable.add(d)
+    }
+
+    fun getToLanguages() {
+        val d = translatorFacadeInteractor.getToLanguages()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    view?.openChooseToLanguageDialog(it as ArrayList<Language>)
                 }, { Logger.d(it); throw it })
         disposable.add(d)
     }

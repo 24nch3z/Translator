@@ -59,8 +59,9 @@ class TranslatorFragment : BaseFragment(), TranslatorView {
         })
 
         lang_from_button.setOnClickListener { presenter.getFromLanguages() }
+        lang_to_button.setOnClickListener { presenter.getToLanguages() }
 
-        presenter.getLanguages()
+        presenter.initLanguages()
     }
 
     override fun onDestroy() {
@@ -86,11 +87,11 @@ class TranslatorFragment : BaseFragment(), TranslatorView {
         }
     }
 
-    override fun openChooseLangFromDialog(languages: ArrayList<Language>) {
+    override fun openChooseFromLanguageDialog(languages: ArrayList<Language>) {
         openChooseLangDialog(languages, TAG_LANG_FROM)
     }
 
-    override fun openChooseLangToDialog(languages: ArrayList<Language>) {
+    override fun openChooseToLanguageDialog(languages: ArrayList<Language>) {
         openChooseLangDialog(languages, TAG_LANG_TO)
     }
 

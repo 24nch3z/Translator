@@ -46,9 +46,24 @@ class TranslatorFacadeInteractorImpl(
                 .flatMap { availableLanguages ->
                     Single.zip(settingsInteractor.getTranslationFrom(), settingsInteractor.getTranslationTo(),
                             BiFunction<String, String, List<String>> { t1, t2 ->
-                                listOf(t1, availableLanguages.find { it == t2 } ?: availableLanguages[0]) })
+                                listOf(t1, availableLanguages.find { it == t2 }
+                                        ?: availableLanguages[0])
+                            })
                 }
                 .flatMap { settingsInteractor.setTranslationTo(it[1]).toSingle { it } }
+                .flatMapObservable { Observable.fromIterable(it) }
+                .flatMapSingle { translatorInteractor.getLanguageLabelByCode(it) }
+                .toList()
+    }
+
+    // TODO: Рефакторинг
+    override fun setToLanguage(language: Language): Single<List<String>> {
+        return settingsInteractor.setTranslationTo(language.code)
+                .toSingle { 0 }
+                .flatMap {
+                    Single.zip(settingsInteractor.getTranslationFrom(), settingsInteractor.getTranslationTo(),
+                            BiFunction<String, String, List<String>> { t1, t2 -> listOf(t1, t2) })
+                }
                 .flatMapObservable { Observable.fromIterable(it) }
                 .flatMapSingle { translatorInteractor.getLanguageLabelByCode(it) }
                 .toList()

@@ -43,8 +43,16 @@ class TranslatorPresenter(
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    view?.openDialog(it as ArrayList<Language>)
+                    view?.openChooseLangFromDialog(it as ArrayList<Language>)
                 }, { Logger.d(it); throw it })
         disposable.add(d)
+    }
+
+    fun setFromLanguage(language: Language) {
+
+    }
+
+    fun setToLanguage(language: Language) {
+
     }
 }

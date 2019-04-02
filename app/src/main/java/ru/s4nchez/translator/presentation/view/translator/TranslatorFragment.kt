@@ -1,6 +1,8 @@
 package ru.s4nchez.translator.presentation.view.translator
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -19,6 +21,11 @@ import javax.inject.Inject
 class TranslatorFragment : BaseFragment(), TranslatorView {
 
     override val layout = R.layout.screen_translator
+
+    private val TAG_LANG_FROM = 1
+    private val TAG_LANG_TO = 2
+
+    private val REQUEST_CODE_DIALOG = 1
 
     @Inject
     lateinit var presenter: TranslatorPresenter
@@ -62,8 +69,34 @@ class TranslatorFragment : BaseFragment(), TranslatorView {
         presenter.unbindView()
     }
 
-    override fun openDialog(langs: ArrayList<Language>) {
-        val dialog = ListDialogFragment.newInstance(langs)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode == Activity.RESULT_OK) {
+            when (requestCode) {
+                REQUEST_CODE_DIALOG -> {
+                    val position = data?.getIntExtra(ListDialogFragment.RESULT_POSITION, TAG_LANG_FROM)
+                    val selectedLanguage = data?.getParcelableExtra<Language>(ListDialogFragment.RESULT_SELECTED)!!
+                    when(position) {
+                        TAG_LANG_FROM -> presenter.setFromLanguage(selectedLanguage)
+                        TAG_LANG_TO -> presenter.setToLanguage(selectedLanguage)
+                    }
+                }
+            }
+        }
+    }
+
+    override fun openChooseLangFromDialog(languages: ArrayList<Language>) {
+        openChooseLangDialog(languages, TAG_LANG_FROM)
+    }
+
+    override fun openChooseLangToDialog(languages: ArrayList<Language>) {
+        openChooseLangDialog(languages, TAG_LANG_TO)
+    }
+
+    private fun openChooseLangDialog(langs: ArrayList<Language>, position: Int) {
+        val dialog = ListDialogFragment.newInstance(langs, position)
+        dialog.setTargetFragment(this, REQUEST_CODE_DIALOG)
         dialog.show(fragmentManager!!, null)
     }
 

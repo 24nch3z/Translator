@@ -80,15 +80,13 @@ class TranslatorFacadeInteractorImpl(
                 .toList()
     }
 
-    // TODO: Рефакторинг
     override fun setToLanguage(language: Language): Single<List<String>> {
         return settingsInteractor.setTranslationTo(language.code)
-                .toSingle { 0 }
-                .flatMap {
-                    Single.zip(settingsInteractor.getTranslationFrom(), settingsInteractor.getTranslationTo(),
-                            BiFunction<String, String, List<String>> { t1, t2 -> listOf(t1, t2) })
+                .toSingle {}
+                .flatMapPublisher {
+                    Single.concat(settingsInteractor.getTranslationFrom(),
+                            settingsInteractor.getTranslationTo())
                 }
-                .flatMapObservable { Observable.fromIterable(it) }
                 .flatMapSingle { translatorInteractor.getLanguageLabelByCode(it) }
                 .toList()
     }

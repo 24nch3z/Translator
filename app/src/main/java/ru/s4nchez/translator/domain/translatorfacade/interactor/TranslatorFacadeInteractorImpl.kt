@@ -17,6 +17,9 @@ class TranslatorFacadeInteractorImpl(
         return translatorInteractor.getLanguages()
                 .map(Languages::langs)
                 .map { langs -> langs.map { lang -> Language(lang.key, lang.value) } }
+                .flatMapObservable { Observable.fromIterable(it) }
+                .sorted { o1, o2 -> o1.label.compareTo(o2.label) }
+                .toList()
     }
 
     /*
@@ -32,6 +35,9 @@ class TranslatorFacadeInteractorImpl(
         return translatorInteractor.getLanguages()
                 .map(Languages::langs)
                 .map { langs -> langs.map { lang -> Language(lang.key, lang.value) } }
+                .flatMapObservable { Observable.fromIterable(it) }
+                .sorted { o1, o2 -> o1.label.compareTo(o2.label) }
+                .toList()
     }
 
     override fun translate(str: String): Single<List<String>> {

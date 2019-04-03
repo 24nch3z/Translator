@@ -60,6 +60,7 @@ class TranslatorFragment : BaseFragment(), TranslatorView {
 
         lang_from_button.setOnClickListener { presenter.getFromLanguages() }
         lang_to_button.setOnClickListener { presenter.getToLanguages() }
+        swap_button.setOnClickListener { presenter.swapLanguages() }
 
         presenter.initLanguages()
     }

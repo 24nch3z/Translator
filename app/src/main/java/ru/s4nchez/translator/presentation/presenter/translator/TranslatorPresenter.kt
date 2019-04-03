@@ -80,4 +80,14 @@ class TranslatorPresenter(
                 }, { Logger.d(it); throw it })
         disposable.add(d)
     }
+
+    fun swapLanguages() {
+        val d = translatorFacadeInteractor.swapLanguages()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    view?.showLanguages(it)
+                }, { Logger.d(it); throw it })
+        disposable.add(d)
+    }
 }

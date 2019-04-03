@@ -58,12 +58,14 @@ class TranslatorFacadeInteractorImpl(
                 .toList()
     }
 
+    // TODO: Рефакторинг
     override fun translate(str: String): Single<List<String>> {
         return Single.zip(settingsInteractor.getTranslationFrom(), settingsInteractor.getTranslationTo(),
                 BiFunction<String, String, Array<String?>> { t1, t2 -> arrayOf(t1, t2) })
                 .flatMap { translatorInteractor.translate(str, it[0]!!, it[1]!!) }
     }
 
+    // TODO: Рефакторинг
     override fun setFromLanguage(language: Language): Single<List<String>> {
         return settingsInteractor.setTranslationFrom(language.code)
                 .andThen(translatorInteractor.getAvailableLanguagesForTranslation(language.code))
@@ -97,6 +99,20 @@ class TranslatorFacadeInteractorImpl(
                     Single.concat(settingsInteractor.getTranslationFrom(),
                             settingsInteractor.getTranslationTo())
                 }
+                .flatMapSingle { translatorInteractor.getLanguageLabelByCode(it) }
+                .toList()
+    }
+
+    // TODO: Рефакторинг
+    override fun swapLanguages(): Single<List<String>> {
+        return Single.concat(settingsInteractor.getTranslationFrom(), settingsInteractor.getTranslationTo())
+                .toList()
+                .flatMap {
+                    settingsInteractor.setTranslationFrom(it[1])
+                            .andThen(settingsInteractor.setTranslationTo(it[0]))
+                            .toSingle { arrayListOf(it[1], it[0]) }
+                }
+                .flatMapObservable { Observable.fromIterable(it) }
                 .flatMapSingle { translatorInteractor.getLanguageLabelByCode(it) }
                 .toList()
     }

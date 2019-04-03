@@ -38,6 +38,8 @@ class TranslatorPresenter(
     }
 
     fun getFromLanguages() {
+        view?.disableLanguagesButtons()
+
         val d = translatorFacadeInteractor.getFromLanguages()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -48,6 +50,8 @@ class TranslatorPresenter(
     }
 
     fun getToLanguages() {
+        view?.disableLanguagesButtons()
+
         val d = translatorFacadeInteractor.getToLanguages()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

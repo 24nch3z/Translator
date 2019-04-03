@@ -11,4 +11,6 @@ interface TranslatorView {
     fun hideProgress()
     fun showUi()
     fun hideUi()
+    fun disableLanguagesButtons()
+    fun enableLanguagesButtons()
 }

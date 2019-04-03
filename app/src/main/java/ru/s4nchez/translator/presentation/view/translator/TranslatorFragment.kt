@@ -78,12 +78,16 @@ class TranslatorFragment : BaseFragment(), TranslatorView {
                 REQUEST_CODE_DIALOG -> {
                     val position = data?.getIntExtra(ListDialogFragment.RESULT_POSITION, TAG_LANG_FROM)
                     val selectedLanguage = data?.getParcelableExtra<Language>(ListDialogFragment.RESULT_SELECTED)!!
-                    when(position) {
+                    when (position) {
                         TAG_LANG_FROM -> presenter.setFromLanguage(selectedLanguage)
                         TAG_LANG_TO -> presenter.setToLanguage(selectedLanguage)
                     }
                 }
             }
+        }
+
+        if (requestCode == REQUEST_CODE_DIALOG) {
+            enableLanguagesButtons()
         }
     }
 
@@ -124,5 +128,17 @@ class TranslatorFragment : BaseFragment(), TranslatorView {
 
     override fun hideUi() {
         ui_container.visibility = View.INVISIBLE
+    }
+
+    override fun disableLanguagesButtons() {
+        lang_from_button.isClickable = false
+        swap_button.isClickable = false
+        lang_to_button.isClickable = false
+    }
+
+    override fun enableLanguagesButtons() {
+        lang_from_button.isClickable = true
+        swap_button.isClickable = true
+        lang_to_button.isClickable = true
     }
 }

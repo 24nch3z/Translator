@@ -5,6 +5,9 @@ import android.app.Dialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import ru.s4nchez.translator.domain.translatorfacade.model.Language
@@ -33,9 +36,15 @@ class ListDialogFragment : DialogFragment() {
 
         val builder = AlertDialog.Builder(activity!!)
                 .setItems(itemsLabel, ::sendResult)
-                .setNegativeButton(android.R.string.cancel) { _, _ -> }
+                .setCancelable(false)
+                .setNegativeButton(android.R.string.cancel) { _, _ -> sendCancel() }
 
         return builder.create()
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        isCancelable = false
+        return super.onCreateView(inflater, container, savedInstanceState)
     }
 
     private fun sendResult(dialog: DialogInterface, which: Int) {
@@ -46,5 +55,9 @@ class ListDialogFragment : DialogFragment() {
         }
 
         targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_OK, intent)
+    }
+
+    private fun sendCancel() {
+        targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_CANCELED, null)
     }
 }

@@ -29,12 +29,30 @@ class TranslatorFacadeInteractorImpl(
             "ru-hu",
             ...
         ],
+
+       "langs": {
+            "ru": "русский",
+            "en": "английский",
+            "pl": "польский",
+            ...
+        }
      */
-    // TODO: Пока что метод возвращает все языки, потом нужно будет фильтровать
     override fun getToLanguages(): Single<List<Language>> {
-        return translatorInteractor.getLanguages()
-                .map(Languages::langs)
-                .map { langs -> langs.map { lang -> Language(lang.key, lang.value) } }
+        val getLanguages = translatorInteractor.getLanguages().map(Languages::langs)
+        fun getAvailableLanguages(fromLanguage: String) = translatorInteractor
+                .getAvailableLanguagesForTranslation(fromLanguage).map { HashSet(it) }
+
+        return settingsInteractor.getTranslationFrom()
+                .flatMap { fromLanguage ->
+                    Single.zip(
+                            getLanguages, getAvailableLanguages(fromLanguage),
+                            BiFunction<HashMap<String, String>, HashSet<String>, List<Language>> { languages, availableLanguages ->
+                                languages
+                                        .filter { availableLanguages.contains(it.key) }
+                                        .map { lang -> Language(lang.key, lang.value) }
+                            }
+                    )
+                }
                 .flatMapObservable { Observable.fromIterable(it) }
                 .sorted { o1, o2 -> o1.label.compareTo(o2.label) }
                 .toList()

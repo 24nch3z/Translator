@@ -24,10 +24,9 @@ class ScreensModule {
 
     @Provides
     fun provideTranslatorPresenter(
-            translatorInteractor: TranslatorInteractor,
             translatorFacadeInteractor: TranslatorFacadeInteractor
     ): TranslatorPresenter {
 
-        return TranslatorPresenter(translatorInteractor, translatorFacadeInteractor)
+        return TranslatorPresenter(translatorFacadeInteractor)
     }
 }

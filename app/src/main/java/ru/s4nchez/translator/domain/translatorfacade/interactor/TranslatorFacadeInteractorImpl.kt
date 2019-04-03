@@ -92,4 +92,14 @@ class TranslatorFacadeInteractorImpl(
                 .flatMapSingle { translatorInteractor.getLanguageLabelByCode(it) }
                 .toList()
     }
+
+    override fun initLanguages(): Single<List<String>> {
+        return translatorInteractor.getLanguages()
+                .flatMapPublisher {
+                    Single.concat(settingsInteractor.getTranslationFrom(),
+                            settingsInteractor.getTranslationTo())
+                }
+                .flatMapSingle { translatorInteractor.getLanguageLabelByCode(it) }
+                .toList()
+    }
 }

@@ -9,4 +9,5 @@ interface TranslatorFacadeInteractor {
     fun translate(str: String): Single<List<String>>
     fun setFromLanguage(language: Language): Single<List<String>>
     fun setToLanguage(language: Language): Single<List<String>>
+    fun initLanguages(): Single<List<String>>
 }

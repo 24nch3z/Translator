@@ -1,11 +1,10 @@
 package ru.s4nchez.translator.presentation.view.translator
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.screen_translator.*
 import ru.s4nchez.translator.App
@@ -29,24 +28,23 @@ class TranslatorFragment : BaseFragment(), TranslatorView {
     @Inject
     lateinit var presenter: TranslatorPresenter
 
-    private lateinit var observer: PublishSubject<String>
+    private lateinit var translateSubject: PublishSubject<String>
+    private lateinit var translateDisposable: Disposable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity?.application as App).componentManager.buildTranslatorComponent().inject(this)
-        observer = PublishSubject.create()
+        translateSubject = PublishSubject.create()
         presenter.bindView(this)
     }
 
-    @SuppressLint("CheckResult")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        observer.debounce(1, TimeUnit.SECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
+        translateDisposable = translateSubject.debounce(1, TimeUnit.SECONDS)
                 .subscribe { presenter.translate(it) }
 
-        input_view.onTextChanged { observer.onNext(it) }
+        input_view.onTextChanged { translateSubject.onNext(it) }
         lang_from_button.setOnClickListener { presenter.getFromLanguages() }
         lang_to_button.setOnClickListener { presenter.getToLanguages() }
         swap_button.setOnClickListener { presenter.swapLanguages() }
@@ -56,6 +54,7 @@ class TranslatorFragment : BaseFragment(), TranslatorView {
 
     override fun onDestroy() {
         super.onDestroy()
+        translateDisposable.dispose()
         (activity?.application as App).componentManager.destroyTranslatorComponent()
         presenter.unbindView()
     }
@@ -97,11 +96,7 @@ class TranslatorFragment : BaseFragment(), TranslatorView {
 
     override fun showTranslate(translate: String) {
         translate_view.text = translate
-        if (translate.trim().isEmpty()) {
-            translation_view.visibility = View.GONE
-        } else {
-            translation_view.visibility = View.VISIBLE
-        }
+        translation_view.visibility = if (translate.trim().isEmpty()) View.GONE else View.VISIBLE
     }
 
     override fun showLanguages(languages: List<String>) {

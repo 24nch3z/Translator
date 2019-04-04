@@ -32,7 +32,7 @@ class TranslatorPresenter(
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    view?.showTranslate(it[0])
+                    view?.showTranslate(it)
                 }, { Logger.d(it); throw it })
         disposable.add(d)
     }

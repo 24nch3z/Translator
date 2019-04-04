@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Переводчик</string>
+
+    <string name="translate_input_hint">Начните вводить текст</string>
 </resources>

@@ -108,6 +108,11 @@ class TranslatorFragment : BaseFragment(), TranslatorView {
 
     override fun showTranslate(translate: String) {
         translate_view.text = translate
+        if (translate.trim().isEmpty()) {
+            translation_view.visibility = View.GONE
+        } else {
+            translation_view.visibility = View.VISIBLE
+        }
     }
 
     override fun showLanguages(languages: List<String>) {

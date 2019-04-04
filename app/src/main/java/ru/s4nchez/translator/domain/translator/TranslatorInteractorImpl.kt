@@ -9,8 +9,9 @@ class TranslatorInteractorImpl(
         private val translationRepository: TranslationRepository
 ) : TranslatorInteractor {
 
-    override fun translate(str: String, fromLanguage: String, toLanguage: String): Single<List<String>> {
+    override fun translate(str: String, fromLanguage: String, toLanguage: String): Single<String> {
         return translationRepository.translate(str, fromLanguage, toLanguage)
+                .map { it[0] }
     }
 
     override fun getLanguages(): Single<Languages> {

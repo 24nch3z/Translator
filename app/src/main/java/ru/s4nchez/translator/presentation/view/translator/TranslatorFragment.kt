@@ -4,8 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
@@ -15,6 +13,7 @@ import ru.s4nchez.translator.R
 import ru.s4nchez.translator.domain.translatorfacade.model.Language
 import ru.s4nchez.translator.presentation.presenter.translator.TranslatorPresenter
 import ru.s4nchez.translator.presentation.view.common.BaseFragment
+import ru.s4nchez.translator.utils.onTextChanged
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -47,17 +46,7 @@ class TranslatorFragment : BaseFragment(), TranslatorView {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { presenter.translate(it) }
 
-        input_view.addTextChangedListener(object : TextWatcher {
-
-            override fun afterTextChanged(s: Editable?) {}
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                observer.onNext(s.toString())
-            }
-        })
-
+        input_view.onTextChanged { observer.onNext(it) }
         lang_from_button.setOnClickListener { presenter.getFromLanguages() }
         lang_to_button.setOnClickListener { presenter.getToLanguages() }
         swap_button.setOnClickListener { presenter.swapLanguages() }

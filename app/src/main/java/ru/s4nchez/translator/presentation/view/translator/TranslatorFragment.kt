@@ -4,9 +4,12 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import io.reactivex.subjects.PublishSubject
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.screen_translator.*
+import ru.s4nchez.logger.Logger
 import ru.s4nchez.translator.App
 import ru.s4nchez.translator.R
 import ru.s4nchez.translator.domain.translatorfacade.model.Language
@@ -28,23 +31,26 @@ class TranslatorFragment : BaseFragment(), TranslatorView {
     @Inject
     lateinit var presenter: TranslatorPresenter
 
-    private lateinit var translateSubject: PublishSubject<String>
     private lateinit var translateDisposable: Disposable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity?.application as App).componentManager.buildTranslatorComponent().inject(this)
-        translateSubject = PublishSubject.create()
         presenter.bindView(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        translateDisposable = translateSubject.debounce(1, TimeUnit.SECONDS)
-                .subscribe { presenter.translate(it) }
+        translateDisposable = Observable
+                .create<String> { em -> input_view.onTextChanged { text -> em.onNext(text) } }
+                .debounce(1, TimeUnit.SECONDS)
+                .distinctUntilChanged()
+                .switchMap { presenter.translate(it) }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ showTranslate(it) }, { Logger.d(it) })
 
-        input_view.onTextChanged { translateSubject.onNext(it) }
         lang_from_button.setOnClickListener { presenter.getFromLanguages() }
         lang_to_button.setOnClickListener { presenter.getToLanguages() }
         swap_button.setOnClickListener { presenter.swapLanguages() }
@@ -54,7 +60,6 @@ class TranslatorFragment : BaseFragment(), TranslatorView {
 
     override fun onDestroy() {
         super.onDestroy()
-        translateDisposable.dispose()
         (activity?.application as App).componentManager.destroyTranslatorComponent()
         presenter.unbindView()
     }
@@ -96,7 +101,7 @@ class TranslatorFragment : BaseFragment(), TranslatorView {
 
     override fun showTranslate(translate: String) {
         translate_view.text = translate
-        translation_view.visibility = if (translate.trim().isEmpty()) View.GONE else View.VISIBLE
+        translation_view.visibility = if (translate.isBlank()) View.GONE else View.VISIBLE
     }
 
     override fun showLanguages(languages: List<String>) {

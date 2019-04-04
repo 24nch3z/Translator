@@ -1,5 +1,6 @@
 package ru.s4nchez.translator.presentation.presenter.translator
 
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import ru.s4nchez.logger.Logger
@@ -27,14 +28,9 @@ class TranslatorPresenter(
         disposable.add(d)
     }
 
-    fun translate(str: String) {
-        val d = translatorFacadeInteractor.translate(str)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    view?.showTranslate(it)
-                }, { Logger.d(it); throw it })
-        disposable.add(d)
+    fun translate(str: String): Observable<String> {
+        return translatorFacadeInteractor.translate(str)
+                .toObservable()
     }
 
     fun getFromLanguages() {

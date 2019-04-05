@@ -24,7 +24,12 @@ class TranslatorPresenter(
                     view?.showLanguages(it)
                     view?.showUi()
                     view?.hideProgress()
-                }, { Logger.d(it); throw it })
+                }, {
+                    Logger.d(it);
+                    view?.setRepeatInitLanguagesRequestFlag()
+                    view?.handleError(it)
+                    view?.hideProgress()
+                })
         disposable.add(d)
     }
 

@@ -34,6 +34,7 @@ class TranslatorFragment : BaseFragment(), TranslatorView, NetworkStatusChangeLi
     lateinit var presenter: TranslatorPresenter
 
     private lateinit var translateDisposable: Disposable
+    private var repeatInitLanguagesRequestFlag = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -140,8 +141,8 @@ class TranslatorFragment : BaseFragment(), TranslatorView, NetworkStatusChangeLi
         lang_to_button.isClickable = true
     }
 
-    override fun networkStatusChange(isInternetConnected: Boolean) {
-        // stub
+    override fun setRepeatInitLanguagesRequestFlag() {
+        repeatInitLanguagesRequestFlag = true
     }
 
     override fun handleError(error: Throwable) {
@@ -152,6 +153,13 @@ class TranslatorFragment : BaseFragment(), TranslatorView, NetworkStatusChangeLi
                 }
             }
             else -> showMessage(getString(R.string.common_error))
+        }
+    }
+
+    override fun networkStatusChange(isInternetConnected: Boolean) {
+        if (isInternetConnected && repeatInitLanguagesRequestFlag) {
+            repeatInitLanguagesRequestFlag = false
+            presenter.initLanguages()
         }
     }
 }

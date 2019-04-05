@@ -13,4 +13,5 @@ interface TranslatorView {
     fun hideUi()
     fun disableLanguagesButtons()
     fun enableLanguagesButtons()
+    fun handleError(error: Throwable)
 }

@@ -4,19 +4,19 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.s4nchez.translator.R
 import ru.s4nchez.translator.presentation.view.translator.TranslatorFragment
+import ru.s4nchez.translator.utils.isInternetConnected
 
 class MainActivity : AppCompatActivity() {
 
     private val networkStatusChangeReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent?) {
-            internet_disable.visibility = if (isInternetConnected()) View.GONE else View.VISIBLE
+            internet_disable.visibility = if (isInternetConnected(context)) View.GONE else View.VISIBLE
         }
     }
 
@@ -41,11 +41,5 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         unregisterReceiver(networkStatusChangeReceiver)
-    }
-
-    private fun isInternetConnected(): Boolean {
-        val cm = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val activeNetwork = cm.activeNetworkInfo ?: return false
-        return activeNetwork.isConnected
     }
 }

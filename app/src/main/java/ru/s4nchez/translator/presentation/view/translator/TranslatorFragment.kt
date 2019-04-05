@@ -9,13 +9,14 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.screen_translator.*
-import ru.s4nchez.logger.Logger
 import ru.s4nchez.translator.App
 import ru.s4nchez.translator.R
 import ru.s4nchez.translator.domain.translatorfacade.model.Language
 import ru.s4nchez.translator.presentation.presenter.translator.TranslatorPresenter
 import ru.s4nchez.translator.presentation.view.common.BaseFragment
+import ru.s4nchez.translator.utils.isInternetConnected
 import ru.s4nchez.translator.utils.onTextChanged
+import java.net.UnknownHostException
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -49,7 +50,7 @@ class TranslatorFragment : BaseFragment(), TranslatorView {
                 .switchMap { presenter.translate(it) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ showTranslate(it) }, { Logger.d(it) })
+                .subscribe({ showTranslate(it) }, { handleError(it) })
 
         lang_from_button.setOnClickListener { presenter.getFromLanguages() }
         lang_to_button.setOnClickListener { presenter.getToLanguages() }
@@ -80,6 +81,7 @@ class TranslatorFragment : BaseFragment(), TranslatorView {
             }
         }
 
+        // Делаем доступными для нажатия кнопки переключения языков при отмене выбора языка в диалоге
         if (requestCode == REQUEST_CODE_DIALOG) {
             enableLanguagesButtons()
         }
@@ -135,5 +137,16 @@ class TranslatorFragment : BaseFragment(), TranslatorView {
         lang_from_button.isClickable = true
         swap_button.isClickable = true
         lang_to_button.isClickable = true
+    }
+
+    override fun handleError(error: Throwable) {
+        when (error) {
+            is UnknownHostException -> {
+                if (!isInternetConnected(context!!)) {
+                    showMessage(getString(R.string.request_error_by_network_lack))
+                }
+            }
+            else -> showMessage(getString(R.string.common_error))
+        }
     }
 }

@@ -3,4 +3,6 @@
 
     <string name="translate_input_hint">Начните вводить текст</string>
     <string name="network_disable">Отсутствует интернет соединение</string>
+    <string name="common_error">Произошла ошибка</string>
+    <string name="request_error_by_network_lack">Произошла ошибка из-за отсутствия интернета</string>
 </resources>

@@ -2,4 +2,5 @@
     <string name="app_name">Переводчик</string>
 
     <string name="translate_input_hint">Начните вводить текст</string>
+    <string name="network_disable">Отсутствует интернет соединение</string>
 </resources>

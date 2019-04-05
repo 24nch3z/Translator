@@ -1,24 +1,14 @@
 package ru.s4nchez.translator.presentation.view.main
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.s4nchez.translator.R
+import ru.s4nchez.translator.presentation.view.common.BaseActivity
+import ru.s4nchez.translator.presentation.view.common.NetworkStatusChangeListener
 import ru.s4nchez.translator.presentation.view.translator.TranslatorFragment
-import ru.s4nchez.translator.utils.isInternetConnected
 
-class MainActivity : AppCompatActivity() {
-
-    private val networkStatusChangeReceiver: BroadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent?) {
-            internet_disable.visibility = if (isInternetConnected(context)) View.GONE else View.VISIBLE
-        }
-    }
+class MainActivity : BaseActivity(), NetworkStatusChangeListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,15 +21,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        val intentFilter = IntentFilter()
-        intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE")
-        registerReceiver(networkStatusChangeReceiver, intentFilter)
-    }
+    override fun networkStatusChange(isInternetConnected: Boolean) {
+        internet_disable.visibility = if (isInternetConnected) View.GONE else View.VISIBLE
 
-    override fun onPause() {
-        super.onPause()
-        unregisterReceiver(networkStatusChangeReceiver)
+        val fragment = supportFragmentManager.findFragmentById(R.id.container)
+        if (fragment is NetworkStatusChangeListener) {
+            fragment.networkStatusChange(isInternetConnected)
+        }
     }
 }

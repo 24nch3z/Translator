@@ -14,13 +14,14 @@ import ru.s4nchez.translator.R
 import ru.s4nchez.translator.domain.translatorfacade.model.Language
 import ru.s4nchez.translator.presentation.presenter.translator.TranslatorPresenter
 import ru.s4nchez.translator.presentation.view.common.BaseFragment
+import ru.s4nchez.translator.presentation.view.common.NetworkStatusChangeListener
 import ru.s4nchez.translator.utils.isInternetConnected
 import ru.s4nchez.translator.utils.onTextChanged
 import java.net.UnknownHostException
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class TranslatorFragment : BaseFragment(), TranslatorView {
+class TranslatorFragment : BaseFragment(), TranslatorView, NetworkStatusChangeListener {
 
     override val layout = R.layout.screen_translator
 
@@ -137,6 +138,10 @@ class TranslatorFragment : BaseFragment(), TranslatorView {
         lang_from_button.isClickable = true
         swap_button.isClickable = true
         lang_to_button.isClickable = true
+    }
+
+    override fun networkStatusChange(isInternetConnected: Boolean) {
+        // stub
     }
 
     override fun handleError(error: Throwable) {

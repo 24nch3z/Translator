@@ -23,4 +23,12 @@ class SettingsInteractorImpl(
     override fun getTranslationTo(): Single<String> {
         return settingsRepository.getTranslationTo()
     }
+
+    override fun setStringForTranslation(text: String): Completable {
+        return settingsRepository.setStringForTranslation(text)
+    }
+
+    override fun getStringForTranslation(): Single<String> {
+        return settingsRepository.getStringForTranslation()
+    }
 }

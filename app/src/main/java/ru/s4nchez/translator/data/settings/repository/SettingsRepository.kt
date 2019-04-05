@@ -8,4 +8,6 @@ interface SettingsRepository {
     fun getTranslationFrom(): Single<String>
     fun setTranslationTo(to: String): Completable
     fun getTranslationTo(): Single<String>
+    fun setStringForTranslation(text: String): Completable
+    fun getStringForTranslation(): Single<String>
 }

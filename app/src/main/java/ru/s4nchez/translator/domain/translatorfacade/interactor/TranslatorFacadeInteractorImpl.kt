@@ -1,5 +1,6 @@
 package ru.s4nchez.translator.domain.translatorfacade.interactor
 
+import android.annotation.SuppressLint
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
@@ -59,10 +60,21 @@ class TranslatorFacadeInteractorImpl(
     }
 
     // TODO: Рефакторинг
+    @SuppressLint("CheckResult")
     override fun translate(str: String): Single<String> {
-        return Single.zip(settingsInteractor.getTranslationFrom(), settingsInteractor.getTranslationTo(),
-                BiFunction<String, String, Array<String?>> { t1, t2 -> arrayOf(t1, t2) })
-                .flatMap { translatorInteractor.translate(str, it[0]!!, it[1]!!) }
+//        return Single.zip(settingsInteractor.getTranslationFrom(), settingsInteractor.getTranslationTo(),
+//                BiFunction<String, String, Array<String?>> { t1, t2 -> arrayOf(t1, t2) })
+//                .flatMap {
+//                    settingsInteractor.setStringForTranslation(str)
+//                            .andThen(translatorInteractor.translate(str, it[0]!!, it[1]!!))
+//                }
+
+        return Single.concat(settingsInteractor.getTranslationFrom(), settingsInteractor.getTranslationTo())
+                .toList()
+                .flatMap {
+                    settingsInteractor.setStringForTranslation(str)
+                            .andThen(translatorInteractor.translate(str, it[0]!!, it[1]!!))
+                }
     }
 
     // TODO: Рефакторинг

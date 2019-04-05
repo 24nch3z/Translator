@@ -28,4 +28,12 @@ class DiskSettingsDataSource(
     override fun getTranslationTo(defaultTo: String): Single<String> {
         return Single.fromCallable { sharedPrefHelper.getString(TRANSLATION_TO, defaultTo) }
     }
+
+    override fun setStringForTranslation(text: String): Completable {
+        throw UnsupportedOperationException()
+    }
+
+    override fun getStringForTranslation(): Single<String> {
+        throw UnsupportedOperationException()
+    }
 }

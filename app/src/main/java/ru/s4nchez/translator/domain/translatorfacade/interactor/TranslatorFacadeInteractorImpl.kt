@@ -67,6 +67,17 @@ class TranslatorFacadeInteractorImpl(
                 }
     }
 
+    override fun translateSavedText(): Single<String> {
+        return Single
+            .concat(
+                settingsInteractor.getTranslationFrom(),
+                settingsInteractor.getTranslationTo(),
+                settingsInteractor.getStringForTranslation()
+            )
+            .toList()
+            .flatMap { translatorInteractor.translate(it[0], it[1], it[2]) }
+    }
+
     // TODO: Рефакторинг
     override fun setFromLanguage(language: Language): Single<List<String>> {
         return settingsInteractor.setTranslationFrom(language.code)
@@ -117,16 +128,5 @@ class TranslatorFacadeInteractorImpl(
                 .flatMapObservable { Observable.fromIterable(it) }
                 .flatMapSingle { translatorInteractor.getLanguageLabelByCode(it) }
                 .toList()
-    }
-
-    override fun translateSavedText(str: String): Single<String> {
-        return Single
-                .concat(
-                        settingsInteractor.getTranslationFrom(),
-                        settingsInteractor.getTranslationTo(),
-                        settingsInteractor.getStringForTranslation()
-                )
-                .toList()
-                .flatMap { translatorInteractor.translate(it[0], it[1], it[2]) }
     }
 }

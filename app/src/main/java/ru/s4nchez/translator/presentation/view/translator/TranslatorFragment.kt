@@ -67,6 +67,11 @@ class TranslatorFragment : BaseFragment(), TranslatorView, NetworkStatusChangeLi
         presenter.unbindView()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        translateDisposable.dispose()
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 

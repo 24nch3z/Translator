@@ -15,4 +15,5 @@ interface TranslatorView {
     fun enableLanguagesButtons()
     fun handleError(error: Throwable)
     fun setRepeatInitLanguagesRequestFlag()
+    fun retranslate()
 }

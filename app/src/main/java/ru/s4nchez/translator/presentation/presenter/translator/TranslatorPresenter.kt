@@ -68,6 +68,7 @@ class TranslatorPresenter(
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     view?.showLanguages(it)
+                    view?.retranslate()
                 }, { Logger.d(it); throw it })
         disposable.add(d)
     }
@@ -78,6 +79,7 @@ class TranslatorPresenter(
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     view?.showLanguages(it)
+                    view?.retranslate()
                 }, { Logger.d(it); throw it })
         disposable.add(d)
     }
@@ -88,6 +90,7 @@ class TranslatorPresenter(
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     view?.showLanguages(it)
+                    view?.retranslate()
                 }, { Logger.d(it); throw it })
         disposable.add(d)
     }

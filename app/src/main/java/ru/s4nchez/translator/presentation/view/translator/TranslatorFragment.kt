@@ -4,10 +4,10 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.screen_translator.*
 import ru.s4nchez.translator.App
 import ru.s4nchez.translator.R
@@ -33,7 +33,9 @@ class TranslatorFragment : BaseFragment(), TranslatorView, NetworkStatusChangeLi
     @Inject
     lateinit var presenter: TranslatorPresenter
 
+    private lateinit var translateSubject: BehaviorSubject<String>
     private lateinit var translateDisposable: Disposable
+
     private var repeatInitLanguagesRequestFlag = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,14 +47,14 @@ class TranslatorFragment : BaseFragment(), TranslatorView, NetworkStatusChangeLi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        translateDisposable = Observable
-                .create<String> { em -> input_view.onTextChanged { text -> em.onNext(text) } }
+        translateSubject = BehaviorSubject.create()
+        translateDisposable = translateSubject
                 .debounce(1, TimeUnit.SECONDS)
-                .distinctUntilChanged()
                 .switchMap { presenter.translate(it) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ showTranslate(it) }, { handleError(it) })
+        input_view.onTextChanged { text -> translateSubject.onNext(text) }
 
         lang_from_button.setOnClickListener { presenter.getFromLanguages() }
         lang_to_button.setOnClickListener { presenter.getToLanguages() }
@@ -61,15 +63,11 @@ class TranslatorFragment : BaseFragment(), TranslatorView, NetworkStatusChangeLi
         presenter.initLanguages()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        (activity?.application as App).componentManager.destroyTranslatorComponent()
-        presenter.unbindView()
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
+        presenter.unbindView()
         translateDisposable.dispose()
+        (activity?.application as App).componentManager.destroyTranslatorComponent()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -159,6 +157,10 @@ class TranslatorFragment : BaseFragment(), TranslatorView, NetworkStatusChangeLi
             }
             else -> showMessage(getString(R.string.common_error))
         }
+    }
+
+    override fun retranslate() {
+        translateSubject.onNext(input_view.text.toString())
     }
 
     override fun networkStatusChange(isInternetConnected: Boolean) {

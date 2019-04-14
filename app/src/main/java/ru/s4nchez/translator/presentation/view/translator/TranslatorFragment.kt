@@ -54,11 +54,15 @@ class TranslatorFragment : BaseFragment(), TranslatorView, NetworkStatusChangeLi
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ showTranslate(it) }, { handleError(it) })
-        input_view.onTextChanged { text -> translateSubject.onNext(text) }
 
         lang_from_button.setOnClickListener { presenter.getFromLanguages() }
         lang_to_button.setOnClickListener { presenter.getToLanguages() }
         swap_button.setOnClickListener { presenter.swapLanguages() }
+        clear_text_button.setOnClickListener { translateSubject.onNext("") }
+        input_view.onTextChanged { text ->
+            translateSubject.onNext(text)
+            clear_text_button.visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
+        }
 
         presenter.initLanguages()
     }
@@ -159,6 +163,7 @@ class TranslatorFragment : BaseFragment(), TranslatorView, NetworkStatusChangeLi
         }
     }
 
+    // TODO: Возможно, использовать значение из репы
     override fun retranslate() {
         translateSubject.onNext(input_view.text.toString())
     }

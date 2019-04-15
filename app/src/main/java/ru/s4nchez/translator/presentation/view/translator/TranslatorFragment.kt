@@ -58,7 +58,7 @@ class TranslatorFragment : BaseFragment(), TranslatorView, NetworkStatusChangeLi
         lang_from_button.setOnClickListener { presenter.getFromLanguages() }
         lang_to_button.setOnClickListener { presenter.getToLanguages() }
         swap_button.setOnClickListener { presenter.swapLanguages() }
-        clear_text_button.setOnClickListener { translateSubject.onNext("") }
+        clear_text_button.setOnClickListener { input_view.setText("") }
         input_view.onTextChanged { text ->
             translateSubject.onNext(text)
             clear_text_button.visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
